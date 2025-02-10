@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Hello World</h1>
+  <p>List of countries</p>
+  <button id="btn">Click me</button>
+  <ul>
+    <!-- <li>USA</li>
+    <li>Canada</li>
+    <li>UK</li>
+    <li>Germany</li>
+    <li>France</li> -->
+  </ul>
+  <script>
+    const ul = document.querySelector('ul');
+    const btn = document.querySelector('#btn');
+    
+    btn.addEventListener('click', async () => {
+      try {
+        // Disable button while loading
+        btn.disabled = true;
+        btn.textContent = 'Loading...';
+        
+        // Clear existing list items
+        ul.innerHTML = '';
+        
+        // Fetch countries from the API
+        const response = await fetch('/countries');
+        if (!response.ok) {
+          throw new Error('Failed to fetch countries');
+        }
+        
+        const countries = await response.json();
+        
+        // Add each country to the list
+        countries.forEach(country => {
+          const li = document.createElement('li');
+          li.textContent = country;
+          ul.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error:', error);
+        // Show error message to user
+        const errorLi = document.createElement('li');
+        errorLi.textContent = 'Error loading countries. Please try again.';
+        errorLi.style.color = 'red';
+        ul.appendChild(errorLi);
+      } finally {
+        // Re-enable button and restore text
+        btn.disabled = false;
+        btn.textContent = 'Click me';
+      }
+    });
+  </script>
+</body>
+</html>
